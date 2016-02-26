@@ -1,3 +1,10 @@
+machine:
+  service:
+    - docker
+
+dependencies:
+  override:
+
 deployment:
   dockerhub:
     branch: master
