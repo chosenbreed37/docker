@@ -1,0 +1,51 @@
+The purpose of this demo is to illustrate how we can deploy  a simple app on docker
+We're going to be using a simple nodejs web app with a mongodb backend
+We're going to be using the following tools from the Docker Toolbox:
+- docker client
+- docker machine
+- docker compose
+
+1. Download and install the Docker Toolbox from https://www.docker.com/products/docker-toolbox
+
+2. Get the source code for the app from https://github.com/chosenbreed37/docker
+
+3. Launch the docker client using the "Docker Quickstart Terminal" shortcut
+Alternatively open up a command prompt, navigate to the docker toolbox folder and run "bash --login -i start.sh"
+
+You should see something like this on the terminal:
+"docker is configured to use the default machine with IP 192.168.99.100"
+
+This tell us that the Docker Toolbox install created a docker instance called "default" with ip "192.168.99.100"
+
+This also tells that the docker client is currently configured to use that instance
+
+If you run "docker-machine ls" on the terminal you should see an entry like this:
+NAME          ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
+default       *        virtualbox   Running   tcp://192.168.99.100:2376           v1.10.1
+
+docker-machine ls lists the docker container instances that client knows about
+This is just to confirm what we've established earlier
+
+4. Navigate to the folder containing the source code
+
+5. Run "docker-compose up -d" to deploy the app to the docker node
+
+6. Run "docker ps" to list the containers currently running
+The terminal should display something like this:
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                      NAMES
+d4729646c11f        mongo               "/entrypoint.sh mongo"   7 minutes ago       Up 7 minutes        0.0.0.0:27017->27017/tcp   docker_db_1
+f91cfc884fc4        docker_web          "/bin/sh -c 'cd /src "   7 minutes ago       Up 7 minutes        0.0.0.0:8080->8080/tcp     docker_web_1
+
+This shows that we have two containers running. One with an instance of mongodb and the other with the web app running on node
+
+7. Navigate to http://192.168.99.100:8080/
+   The web app should be up and running with no quotes available
+
+8. Run "docker exec -i -t docker_db_1 bash" on the terminal
+This takes into the container running mongodb
+Run "mongo" to connect to mongodb
+
+Run "use bard;" to switch to the "bard" database
+Run "db.musings.insert({quote: "Do or do not. There is no try", source: "Master Yoda"});" to add a new quote
+
+10. Navigate to http://192.168.99.100:8080/ and check that newly added quote is on the page (a refresh may be required)

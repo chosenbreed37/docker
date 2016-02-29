@@ -1,0 +1,80 @@
+The purpose of this demo is to illustrate how we can deploy  a simple app on docker on AWS
+We're going to be using a simple nodejs web app with a mongodb backend
+We're going to be using the following tools from the Docker Toolbox:
+- docker client
+- docker machine
+- docker compose
+
+1. Download and install the Docker Toolbox from https://www.docker.com/products/docker-toolbox
+
+2. Get the source code for the app from https://github.com/chosenbreed37/docker
+
+3. Launch the docker client using the "Docker Quickstart Terminal" shortcut
+Alternatively open up a command prompt, navigate to the docker toolbox folder and run "bash --login -i start.sh"
+
+You should see something like this on the terminal:
+"docker is configured to use the default machine with IP {some ip address}"
+
+This tell us that the Docker Toolbox install created a docker instance called "default" with ip "{some ip address}"
+
+This also tells that the docker client is currently configured to use that instance
+
+If you run "docker-machine ls" on the terminal you should see an entry like this:
+NAME          ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
+default       *        virtualbox   Running   tcp://{some ip address}:2376           v1.10.1
+
+docker-machine ls lists the docker container instances that client knows about
+This is just to confirm what we've established earlier
+
+3.a Navigate to the home drive and create a folder called ".aws"
+    Create a file called "credentials" withn the .aws folder
+    Populate the file with appropriate aws access key id and aws secret access key (alternatively these could be specified on the command line)
+
+3.b Run "docker-machine create -d amazonec2 --amazonec2-vpc-id {vpcid} --amazonec2-region {region} {nodename}"
+-d tells docker machine to use the amazonec2 driver
+The following two parameters are specific to AWS specifying the virtual private cloud id and the region
+* The access key id and secret access key can also be specified here using --amazonec2-access-key and --amazonec2-secret-key respectively
+The last parameter is the name you wish to give to the instance
+
+This process may take several minutes...
+
+3.c Run "docker-machine ls"
+If the new instance is marked as "active" you can go to step # 4
+
+Configure the docker client to use the new node
+Run "docker-machine env {nodename}" followed by "eval $("C:\Program Files\Docker Toolbox\docker-machine.exe" env docker-ec2)"
+* Depending on your environment setup you may not need a fully qualified path to docker-machine.exe
+** Also the client may actually suggest the command text to execute
+
+4. Navigate to the folder containing the source code
+
+5. Run "docker-compose up -d" to deploy the app to the docker node
+
+6. Run "docker ps" to list the containers currently running
+The terminal should display something like this:
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                      NAMES
+d4729646c11f        mongo               "/entrypoint.sh mongo"   7 minutes ago       Up 7 minutes        0.0.0.0:27017->27017/tcp   docker_db_1
+f91cfc884fc4        docker_web          "/bin/sh -c 'cd /src "   7 minutes ago       Up 7 minutes        0.0.0.0:8080->8080/tcp     docker_web_1
+
+This shows that we have two containers running. One with an instance of mongodb and the other with the web app running on node
+
+6.a Run "docker-machine ip {nodename}" to determine the ip address of the instance
+
+7. Navigate to http://{node ip address}:8080/
+   The web app should be up and running with no quotes available
+
+8. Run "docker exec -i -t docker_db_1 bash" on the terminal
+This takes into the container running mongodb
+Run "mongo" to connect to mongodb
+
+Run "use bard;" to switch to the "bard" database
+Run "db.musings.insert({quote: "Do or do not. There is no try", source: "Master Yoda"});" to add a new quote
+
+10. Navigate to http://{node ip address}:8080/ and check that newly added quote is on the page (a refresh may be required)
+
+Reference:
+Documentation for docker machine with AWS
+https://docs.docker.com/machine/examples/aws/
+
+Documentation for the amazonec2 driver
+https://docs.docker.com/machine/drivers/aws/
