@@ -29,6 +29,10 @@ This is just to confirm what we've established earlier
 3.a Navigate to the home drive and create a folder called ".aws"
     Create a file called "credentials" withn the .aws folder
     Populate the file with appropriate aws access key id and aws secret access key (alternatively these could be specified on the command line)
+    -- assumes the user associated with these credentials has sufficient permissions (e.g. administrator on ec2)
+    You may also need to edit the inbound rules for the associated security group on ec2
+    -- e.g: Add All ICMP to enable "ping"
+    -- e.g: Add HTTP (hardcoded to port 80) or All TCP to specify suitable port range
 
 3.b Run "docker-machine create -d amazonec2 --amazonec2-vpc-id {vpcid} --amazonec2-region {region} {nodename}"
 -d tells docker machine to use the amazonec2 driver
