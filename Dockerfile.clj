@@ -17,10 +17,10 @@ RUN apt-get install -y vim
 RUN apt-get install -y tree
 
 # install git
-RUN apt-get install git
+RUN apt-get install -y git
 
 # run lein once
 RUN lein --help
 
-RUN mkdir /src
-WORKDIR /src
+RUN mkdir /git
+WORKDIR /git
