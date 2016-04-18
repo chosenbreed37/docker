@@ -7,10 +7,20 @@ RUN wget -q -O /usr/bin/lein \
     https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein \
         && chmod +x /usr/bin/lein
 
-#install vim
-RUN apt-get -y install vim
+# update packages
+RUN apt-get update
 
-RUN lein
+# install vim
+RUN apt-get install -y vim
+
+# install tree
+RUN apt-get install -y tree
+
+# install git
+RUN apt-get install git
+
+# run lein once
+RUN lein --help
 
 RUN mkdir /src
 WORKDIR /src
