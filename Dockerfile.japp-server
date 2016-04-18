@@ -1,6 +1,9 @@
 FROM chosenbreed/lein-clj 
 MAINTAINER chosenbreed <chosenbreed@gmail.com>
 
+# install curl
+RUN apt-get install -y --force-yes curl
+
 # clone repo
 RUN git clone https://github.com/chosenbreed37/japp-server
 

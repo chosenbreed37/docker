@@ -11,13 +11,13 @@ RUN wget -q -O /usr/bin/lein \
 RUN apt-get update
 
 # install vim
-RUN apt-get install -y vim
+RUN apt-get install -y --force-yes vim
 
 # install tree
-RUN apt-get install -y tree
+RUN apt-get install -y --force-yes tree
 
 # install git
-RUN apt-get install -y git
+RUN apt-get install -y --force-yes git
 
 # run lein once
 RUN lein --help
