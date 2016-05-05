@@ -21,6 +21,13 @@ RUN apt-get install -y --force-yes curl
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install -y --force-yes  nodejs
 
+# fix SSL
+RUN apt-get update
+RUN apt-get install libssl1.0.0 libssl-dev
+RUN cd /lib/x86_64-linux-gnu
+RUN ln -s libssl.so.1.0.0 libssl.so.10
+RUN ln -s libcrypto.so.1.0.0 libcrypto.so.10
+
 # install elm
 RUN npm install -g -y --force-yes elm
 
