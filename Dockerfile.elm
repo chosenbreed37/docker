@@ -23,7 +23,7 @@ RUN apt-get install -y --force-yes  nodejs
 
 # fix SSL
 RUN apt-get update
-RUN apt-get install libssl1.0.0 libssl-dev
+RUN apt-get install -y --force-yes libssl1.0.0 libssl-dev
 RUN cd /lib/x86_64-linux-gnu
 RUN ln -s libssl.so.1.0.0 libssl.so.10
 RUN ln -s libcrypto.so.1.0.0 libcrypto.so.10
@@ -36,5 +36,5 @@ RUN mkdir /git
 WORKDIR /git
 
 # run the elm repl
-elm-repl
+#elm repl
 
