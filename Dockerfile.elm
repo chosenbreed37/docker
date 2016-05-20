@@ -35,6 +35,10 @@ RUN npm install -g -y --force-yes elm
 RUN mkdir /git
 WORKDIR /git
 
-# run the elm repl
-#elm repl
+# expose port 8000
+EXPOSE 8000
+
+CMD [ "--address=0.0.0.0" ] 
+
+
 
