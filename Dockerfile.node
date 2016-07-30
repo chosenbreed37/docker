@@ -21,12 +21,33 @@ RUN apt-get install -y --force-yes curl
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install -y --force-yes  nodejs
 
-# set up working directory
-RUN mkdir /git
-WORKDIR /git
+# install standardjs
+RUN npm install -g standard
+
+# install standardjs auto formatting on save
+RUN npm install -g standard-format
+
+# install pathogen
+RUN mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+# add entry to ~/.vimrc
+RUN echo "execute pathogen#infect()" >> ~/.vimrc
+
+# install syntastic as a pathogen bundle
+RUN cd ~/.vim/bundle && git clone https://github.com/scrooloose/syntastic.git
+
+# add entry to ~/.vimrc
+RUN echo "let g:syntastic_javascript_checkers = ['standard']" >> ~/.vimrc
+RUN echo "autocmd bufwritepost *.js silent !standard-format -w %" >> ~/.vimrc
+RUN echo "set autoread" >> ~/.vimrc
+
+# install linkchecker
+RUN apt-get install -y --force-yes linkchecker
+
+# install grunt cli
+RUN npm install -g grunt-cli
 
 # expose port 8000
 EXPOSE 8000
 
-CMD [ "--address=0.0.0.0" ]
 
